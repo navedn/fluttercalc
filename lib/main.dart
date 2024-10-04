@@ -4,6 +4,43 @@ void main() {
   runApp(const MyApp());
 }
 
+ThemeData myTheme() {
+  return ThemeData(
+    colorScheme: ColorScheme(
+      primary: Color.fromRGBO(251, 111, 146, 1), // Main App Bar Color
+      secondary: Color.fromRGBO(255, 143, 171, 1), // Accent/Highlight color
+      background: Color.fromRGBO(255, 229, 236, 1), // Background color
+      surface: Color.fromRGBO(255, 179, 198, 1), // Button color
+      error: Colors.red,
+      onPrimary: Colors.black, // Text color on primary
+      onSecondary: Colors.black, // Text color on secondary
+      onBackground: Colors.black, // Text color on background
+      onSurface: Colors.black, // Text color on surface
+      onError: Colors.white,
+      brightness: Brightness.light,
+    ),
+    scaffoldBackgroundColor: Color.fromRGBO(255, 229, 236, 1),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        textStyle: TextStyle(fontSize: 24), // Larger button text
+        padding: EdgeInsets.symmetric(
+            vertical: 15, horizontal: 25), // Larger button padding
+        backgroundColor:
+            Color.fromRGBO(255, 179, 198, 1), // Default button background
+      ),
+    ),
+    textTheme: TextTheme(
+      headlineMedium:
+          TextStyle(fontSize: 36, color: Colors.black), // Larger display text
+      bodyMedium: TextStyle(fontSize: 24), // Larger text in general
+    ),
+    appBarTheme: AppBarTheme(
+      backgroundColor: Color.fromRGBO(251, 111, 146, 1),
+      titleTextStyle: TextStyle(fontSize: 24, color: Colors.black),
+    ),
+  );
+}
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -11,10 +48,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Calculator',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
+      theme: myTheme(),
       home: const MyHomePage(title: 'Calculator'),
     );
   }
@@ -64,6 +98,13 @@ class _MyHomePageState extends State<MyHomePage> {
         result = _firstOperand * _secondOperand;
         break;
       case '/':
+        if (_secondOperand == 0) {
+          setState(() {
+            _displayText =
+                'Undefined: Div by Zero'; // Display error message when dividing by Zero
+          });
+          return;
+        }
         result = _firstOperand / _secondOperand;
         break;
       case '%':
@@ -123,7 +164,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: Color.fromRGBO(251, 111, 146, 1),
         title: Text(widget.title),
       ),
       body: Center(
@@ -134,82 +175,204 @@ class _MyHomePageState extends State<MyHomePage> {
               _displayText.isEmpty ? '0' : _displayText, // Display text or 0
               style: Theme.of(context).textTheme.headlineMedium,
             ),
+            SizedBox(height: 8),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton(
-                    onPressed: _onClearPressed, child: const Text('AC')),
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Color.fromRGBO(204, 86, 116, 0.8)),
+                    onPressed: _onClearPressed,
+                    child: const Text(
+                      'AC',
+                      style: TextStyle(color: Colors.black),
+                    )),
+                SizedBox(width: 5),
                 ElevatedButton(
-                    onPressed: _onToggleSignPressed, child: Text('+/-')),
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Color.fromRGBO(204, 86, 116, 0.8)),
+                    onPressed: _onToggleSignPressed,
+                    child: Text(
+                      '+/-',
+                      style: TextStyle(color: Colors.black),
+                    )),
+                SizedBox(width: 5),
                 ElevatedButton(
-                    onPressed: () => _onOperatorPressed('%'), child: Text('%')),
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Color.fromRGBO(204, 86, 116, 0.8)),
+                    onPressed: () => _onOperatorPressed('%'),
+                    child: Text(
+                      '%',
+                      style: TextStyle(color: Colors.black),
+                    )),
+                SizedBox(width: 5),
                 ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Color.fromRGBO(255, 143, 171, 1)),
                     onPressed: () => _onOperatorPressed('/'),
-                    child: const Text('/')),
+                    child: const Text(
+                      '/',
+                      style: TextStyle(color: Colors.black),
+                    )),
               ],
             ),
+            SizedBox(height: 5),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Color.fromRGBO(255, 194, 209, 1)),
                     onPressed: () => _onNumberPressed('7'),
-                    child: const Text('7')),
+                    child: const Text(
+                      '7',
+                      style: TextStyle(color: Colors.black),
+                    )),
+                SizedBox(width: 5),
                 ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Color.fromRGBO(255, 194, 209, 1)),
                     onPressed: () => _onNumberPressed('8'),
-                    child: const Text('8')),
+                    child: const Text(
+                      '8',
+                      style: TextStyle(color: Colors.black),
+                    )),
+                SizedBox(width: 5),
                 ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Color.fromRGBO(255, 194, 209, 1)),
                     onPressed: () => _onNumberPressed('9'),
-                    child: const Text('9')),
+                    child: const Text(
+                      '9',
+                      style: TextStyle(color: Colors.black),
+                    )),
+                SizedBox(width: 5),
                 ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Color.fromRGBO(255, 143, 171, 1)),
                     onPressed: () => _onOperatorPressed('*'),
-                    child: const Text('*')),
+                    child: const Text(
+                      '*',
+                      style: TextStyle(color: Colors.black),
+                    )),
               ],
             ),
+            SizedBox(height: 5),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Color.fromRGBO(255, 194, 209, 1)),
                     onPressed: () => _onNumberPressed('4'),
-                    child: const Text('4')),
+                    child: const Text(
+                      '4',
+                      style: TextStyle(color: Colors.black),
+                    )),
+                SizedBox(width: 5),
                 ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Color.fromRGBO(255, 194, 209, 1)),
                     onPressed: () => _onNumberPressed('5'),
-                    child: const Text('5')),
+                    child: const Text(
+                      '5',
+                      style: TextStyle(color: Colors.black),
+                    )),
+                SizedBox(width: 5),
                 ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Color.fromRGBO(255, 194, 209, 1)),
                     onPressed: () => _onNumberPressed('6'),
-                    child: const Text('6')),
+                    child: const Text(
+                      '6',
+                      style: TextStyle(color: Colors.black),
+                    )),
+                SizedBox(width: 5),
                 ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Color.fromRGBO(255, 143, 171, 1)),
                     onPressed: () => _onOperatorPressed('-'),
-                    child: const Text('-')),
+                    child: const Text(
+                      '-',
+                      style: TextStyle(color: Colors.black),
+                    )),
               ],
             ),
+            SizedBox(height: 5),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Color.fromRGBO(255, 194, 209, 1)),
                     onPressed: () => _onNumberPressed('1'),
-                    child: const Text('1')),
+                    child: const Text(
+                      '1',
+                      style: TextStyle(color: Colors.black),
+                    )),
+                SizedBox(width: 5),
                 ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Color.fromRGBO(255, 194, 209, 1)),
                     onPressed: () => _onNumberPressed('2'),
-                    child: const Text('2')),
+                    child: const Text(
+                      '2',
+                      style: TextStyle(color: Colors.black),
+                    )),
+                SizedBox(width: 5),
                 ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Color.fromRGBO(255, 194, 209, 1)),
                     onPressed: () => _onNumberPressed('3'),
-                    child: const Text('3')),
+                    child: const Text(
+                      '3',
+                      style: TextStyle(color: Colors.black),
+                    )),
+                SizedBox(width: 5),
                 ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Color.fromRGBO(255, 143, 171, 1)),
                     onPressed: () => _onOperatorPressed('+'),
-                    child: const Text('+')),
+                    child: const Text(
+                      '+',
+                      style: TextStyle(color: Colors.black),
+                    )),
               ],
             ),
+            SizedBox(height: 5),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                SizedBox(
+                  width: 140.0, // Button width
+
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Color.fromRGBO(255, 194, 209, 1)),
+                      onPressed: () => _onNumberPressed('0'),
+                      child: const Text(
+                        '0',
+                        style: TextStyle(color: Colors.black),
+                      )),
+                ),
+                SizedBox(width: 5),
                 ElevatedButton(
-                    onPressed: () => _onNumberPressed('0'),
-                    child: const Text('0')),
-                ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Color.fromRGBO(255, 194, 209, 1)),
                     onPressed: () => _onDecimalPressed(),
-                    child: const Text('.')),
+                    child: const Text(
+                      '.',
+                      style: TextStyle(color: Colors.black),
+                    )),
+                SizedBox(width: 5),
                 ElevatedButton(
-                    onPressed: _onEqualPressed, child: const Text('=')),
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Color.fromRGBO(255, 143, 171, 1)),
+                    onPressed: _onEqualPressed,
+                    child: const Text(
+                      '=',
+                      style: TextStyle(color: Colors.black),
+                    )),
               ],
             ),
           ],
