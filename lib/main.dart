@@ -44,6 +44,14 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  void _onDecimalPressed() {
+    if (!_displayText.contains('.')) {
+      setState(() {
+        _displayText += '.';
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -127,7 +135,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     onPressed: () => _onNumberPressed('0'),
                     child: const Text('0')),
                 ElevatedButton(
-                    onPressed: () => _onNumberPressed('.'),
+                    onPressed: () => _onDecimalPressed(),
                     child: const Text('.')),
                 ElevatedButton(
                     onPressed: DoNothingAction.new, child: const Text('=')),
