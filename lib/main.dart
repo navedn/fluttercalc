@@ -31,6 +31,9 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   String _displayText = '';
+  double _firstOperand = 0;
+  double _secondOperand = 0;
+  String? _operator;
 
   void _onNumberPressed(String number) {
     setState(() {
@@ -38,9 +41,57 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  void _onOperatorPressed(String operator) {
+    _firstOperand = double.parse(_displayText);
+    _operator = operator;
+    setState(() {
+      _displayText = '';
+    });
+  }
+
+  void _onEqualPressed() {
+    _secondOperand = double.parse(_displayText); // Get the second operand
+
+    double result;
+    switch (_operator) {
+      case '+':
+        result = _firstOperand + _secondOperand;
+        break;
+      case '-':
+        result = _firstOperand - _secondOperand;
+        break;
+      case '*':
+        result = _firstOperand * _secondOperand;
+        break;
+      case '/':
+        result = _firstOperand / _secondOperand;
+        break;
+      case '%':
+        result = _firstOperand % _secondOperand;
+        break;
+      default:
+        result = 0;
+        break;
+    }
+
+    setState(() {
+      if (result == result.toInt()) {
+        _displayText = result
+            .toInt()
+            .toString(); // Display as integer if it has no decimals
+      } else {
+        _displayText = result
+            .toString(); // Display as floating point if it is not a whole number
+      }
+    });
+  }
+
   void _onClearPressed() {
     setState(() {
-      _displayText = ''; // Clear the display
+      _displayText = '';
+      _firstOperand = 0;
+      _secondOperand = 0;
+      _operator = null;
     });
   }
 
@@ -48,6 +99,22 @@ class _MyHomePageState extends State<MyHomePage> {
     if (!_displayText.contains('.')) {
       setState(() {
         _displayText += '.';
+      });
+    }
+  }
+
+  void _onToggleSignPressed() {
+    if (_displayText.isNotEmpty) {
+      setState(() {
+        if (_displayText.contains('.')) {
+          double currentNumber = double.parse(_displayText);
+          _displayText =
+              (-currentNumber).toString(); // Keep decimal if it already exists
+        } else {
+          int currentNumber = int.parse(_displayText);
+          _displayText = (-currentNumber)
+              .toString(); // Does not add '.0' if it does not have a decimal yet.
+        }
       });
     }
   }
@@ -73,11 +140,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 ElevatedButton(
                     onPressed: _onClearPressed, child: const Text('AC')),
                 ElevatedButton(
-                    onPressed: DoNothingAction.new, child: const Text('+/-')),
+                    onPressed: _onToggleSignPressed, child: Text('+/-')),
                 ElevatedButton(
-                    onPressed: DoNothingAction.new, child: const Text('%')),
+                    onPressed: () => _onOperatorPressed('%'), child: Text('%')),
                 ElevatedButton(
-                    onPressed: DoNothingAction.new, child: const Text('/')),
+                    onPressed: () => _onOperatorPressed('/'),
+                    child: const Text('/')),
               ],
             ),
             Row(
@@ -93,7 +161,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     onPressed: () => _onNumberPressed('9'),
                     child: const Text('9')),
                 ElevatedButton(
-                    onPressed: DoNothingAction.new, child: const Text('*')),
+                    onPressed: () => _onOperatorPressed('*'),
+                    child: const Text('*')),
               ],
             ),
             Row(
@@ -109,7 +178,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     onPressed: () => _onNumberPressed('6'),
                     child: const Text('6')),
                 ElevatedButton(
-                    onPressed: DoNothingAction.new, child: const Text('-')),
+                    onPressed: () => _onOperatorPressed('-'),
+                    child: const Text('-')),
               ],
             ),
             Row(
@@ -125,7 +195,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     onPressed: () => _onNumberPressed('3'),
                     child: const Text('3')),
                 ElevatedButton(
-                    onPressed: DoNothingAction.new, child: const Text('+')),
+                    onPressed: () => _onOperatorPressed('+'),
+                    child: const Text('+')),
               ],
             ),
             Row(
@@ -138,7 +209,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     onPressed: () => _onDecimalPressed(),
                     child: const Text('.')),
                 ElevatedButton(
-                    onPressed: DoNothingAction.new, child: const Text('=')),
+                    onPressed: _onEqualPressed, child: const Text('=')),
               ],
             ),
           ],
