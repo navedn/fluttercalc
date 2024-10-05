@@ -4,6 +4,8 @@ void main() {
   runApp(const MyApp());
 }
 
+///Todo: If the equals symbol is pressed repeatedly without changing anything how does it change the displayed number?
+
 ThemeData myTheme() {
   return ThemeData(
     colorScheme: ColorScheme(
@@ -71,12 +73,18 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _onNumberPressed(String number) {
     setState(() {
-      _displayText += number; // Append the number to the display
+      if (_displayText.isEmpty && _operator != null) {
+        _displayText = number;
+      } else {
+        _displayText += number;
+      }
     });
   }
 
   void _onOperatorPressed(String operator) {
-    _firstOperand = double.parse(_displayText);
+    if (_displayText.isNotEmpty) {
+      _firstOperand = double.parse(_displayText);
+    }
     _operator = operator;
     setState(() {
       _displayText = '';
@@ -84,47 +92,50 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _onEqualPressed() {
-    _secondOperand = double.parse(_displayText); // Get the second operand
-
-    double result;
-    switch (_operator) {
-      case '+':
-        result = _firstOperand + _secondOperand;
-        break;
-      case '-':
-        result = _firstOperand - _secondOperand;
-        break;
-      case '*':
-        result = _firstOperand * _secondOperand;
-        break;
-      case '/':
-        if (_secondOperand == 0) {
-          setState(() {
-            _displayText =
-                'Undefined: Div by Zero'; // Display error message when dividing by Zero
-          });
-          return;
-        }
-        result = _firstOperand / _secondOperand;
-        break;
-      case '%':
-        result = _firstOperand % _secondOperand;
-        break;
-      default:
-        result = 0;
-        break;
-    }
-
-    setState(() {
-      if (result == result.toInt()) {
-        _displayText = result
-            .toInt()
-            .toString(); // Display as integer if it has no decimals
-      } else {
-        _displayText = result
-            .toString(); // Display as floating point if it is not a whole number
+    if (_operator != null && _displayText.isNotEmpty) {
+      if (_secondOperand == 0) {
+        _secondOperand = double.parse(_displayText);
       }
-    });
+
+      double result;
+      switch (_operator) {
+        case '+':
+          result = _firstOperand + _secondOperand;
+          break;
+        case '-':
+          result = _firstOperand - _secondOperand;
+          break;
+        case '*':
+          result = _firstOperand * _secondOperand;
+          break;
+        case '/':
+          if (_secondOperand == 0) {
+            setState(() {
+              _displayText =
+                  'Undefined: Div by Zero'; // Handle division by zero
+            });
+            return;
+          }
+          result = _firstOperand / _secondOperand;
+          break;
+        case '%':
+          result = _firstOperand % _secondOperand;
+          break;
+        default:
+          result = 0;
+          break;
+      }
+
+      // Update display with the result
+      setState(() {
+        // Update display with result
+        _displayText =
+            result.toStringAsFixed(10).replaceFirst(RegExp(r'\.?0+$'), '');
+        _firstOperand = result;
+        _secondOperand = 0;
+        _operator = null;
+      });
+    }
   }
 
   void _onClearPressed() {
